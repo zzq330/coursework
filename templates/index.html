@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古诗生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 80px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-image: url('static/background.jpg'); /* 背景图片 */
+            background-size: cover; /* 使图片覆盖整个背景 */
+            background-position: center; /* 使图片居中 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.06); /* 使背景半透明 */
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 25px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: black;
+            border: none;
+        } 
+        #input-sentence {
+            width: 96%;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>古诗生成器</h1>
+        <label for="input-sentence"><strong>输入古诗上句：</strong></label>
+        <input type="text" id="input-sentence" placeholder="请输入古诗上句">
+        
+        <label for="model-select"><strong>选择模型：</strong></label>
+        <select id="model-select">
+            <option value="NN">神经网络模型</option>
+            <option value="Markov">马尔科夫模型</option>
+            <option value="Maximum_Entropy">最大熵模型</option>
+            <!-- 可以添加其他模型选项 -->
+        </select>
+        
+        <button onclick="generatePoem()"><strong>生成下句</strong></button>
+        
+        <div class="output" id="output"></div>
+    </div>
+    <script>
+        function generatePoem() {
+            const inputSentence = document.getElementById('input-sentence').value;
+            const model = document.getElementById('model-select').value;
+            
+            fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ sentence: inputSentence, model: model })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').innerText = data.result;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
