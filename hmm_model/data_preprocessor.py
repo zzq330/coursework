@@ -39,14 +39,14 @@ class DataPreprocessor:
         if mod == 0:
             # 选取0-9000的唐诗
             print("Train")
-            for i in range(0, 10000, 1000):
-                self.data_pairs += self.extract_paragraphs(self.load_json(f'D:\AppData\python\peom_generate\coursework\全唐诗/poet.tang.{i}.json'))
+            for i in range(0, 50000, 1000):
+                self.data_pairs += self.extract_paragraphs(self.load_json(f'../全唐诗/poet.tang.{i}.json'))
             # for i in range(0, 200000, 1000):
             #     self.data_pairs += self.extract_paragraphs(self.load_json(f'../全唐诗/poet.song.{i}.json'))
         else:
             print("Test")
-            for i in range(10000, 12000, 1000):
-                self.data_pairs += self.extract_paragraphs(self.load_json(f'D:\AppData\python\peom_generate\coursework\全唐诗/poet.tang.{i}.json'))
+            for i in range(50000, 52000, 1000):
+                self.data_pairs += self.extract_paragraphs(self.load_json(f'../全唐诗/poet.tang.{i}.json'))
             # for i in range(200000, 255000, 1000):
             #     self.data_pairs += self.extract_paragraphs(self.load_json(f'../全唐诗/poet.song.{i}.json'))
 
@@ -59,6 +59,9 @@ class DataPreprocessor:
             self.tokenizer = Tokenizer(char_level=True)
             # 构建词汇表
             self.tokenizer.fit_on_texts(inputs + targets)
+        else:
+            # 确保这里已经调用 self.load 加载 tokenizer 完成
+            pass
 
         # 上句转为序列
         input_sequences = self.tokenizer.texts_to_sequences(inputs)
@@ -80,7 +83,7 @@ class DataPreprocessor:
         return self.input_sequences, self.target_sequences
 
     # 保存tokenizer和max_seq_len
-    def save(self, tokenizer_path, max_seq_len_path, input_sequences_path=None, target_sequences_path=None):
+    def save(self, tokenizer_path, max_seq_len_path, input_sequences_path, target_sequences_path):
         with open(tokenizer_path, 'w', encoding='utf-8') as f:
             json.dump(self.tokenizer.word_index, f)
         with open(max_seq_len_path, 'w') as f:
@@ -100,8 +103,7 @@ class DataPreprocessor:
             self.max_seq_len = int(f.read())
         self.vocab_size = len(self.tokenizer.word_index) + 1
 
-
 if __name__ == "__main__":
     data_preprocessor = DataPreprocessor()
     input_sequences, target_sequences = data_preprocessor.preprocess_data()
-    data_preprocessor.save('D:\AppData\python\peom_generate\coursework\\token/tokenizer.json', 'D:\AppData\python\peom_generate\coursework\\token/max_seq_len.txt')
+    data_preprocessor.save('token/tokenizer.json', 'token/max_seq_len.txt', "", "")
