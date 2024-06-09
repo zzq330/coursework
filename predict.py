@@ -3,7 +3,7 @@
 import numpy as np
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import load_model
-from data_preprocessor import DataPreprocessor
+from BiLSTM.data_preprocessor import DataPreprocessor
 
 # 新建数据预处理对象
 data_preprocessor = DataPreprocessor()

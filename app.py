@@ -2,20 +2,20 @@ from flask import Flask, request, jsonify, send_from_directory, render_template
 import numpy as np
 from keras.models import load_model
 from keras.preprocessing.sequence import pad_sequences
-from data_preprocessor import DataPreprocessor
-from LSTM import LSTMCell, BidirectionalLSTM
+from BiLSTM.data_preprocessor import DataPreprocessor
+from BiLSTM.LSTM import LSTMCell, BidirectionalLSTM
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
 # 加载已经训练好的模型和预处理器
-model1 = load_model('model_saved/poetry_model_final.h5',
+model1 = load_model('BiLSTM/model_saved/poetry_model_final_v1.h5',
                     custom_objects={'LSTMCell': LSTMCell,
                                     'BidirectionalLSTM': BidirectionalLSTM})
 
 # 新建数据预处理对象
 data_preprocessor = DataPreprocessor()
 # 加载 tokenizer 和 max_seq_len
-data_preprocessor.load('tokenizer/tokenizer_final.json', 'max_seq_len/max_seq_len_final.txt')
+data_preprocessor.load('BiLSTM/tokenizer/tokenizer_final.json', 'max_seq_len/max_seq_len_final.txt')
 
 @app.route('/')
 def index():

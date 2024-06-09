@@ -1,4 +1,4 @@
-from data_preprocessor import DataPreprocessor
+from BiLSTM.data_preprocessor import DataPreprocessor
 data = [
     ("床前明月光", "疑是地上霜"),
     ("举头望明月", "低头思故乡"),
