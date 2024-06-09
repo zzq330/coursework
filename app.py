@@ -1,10 +1,14 @@
+
+import random
+import json
 from flask import Flask, request, jsonify, send_from_directory, render_template
 import numpy as np
 from keras.models import load_model
-from keras.preprocessing.sequence import pad_sequences
+from keras_preprocessing.sequence import pad_sequences
 from BiLSTM.data_preprocessor import DataPreprocessor
 from BiLSTM.LSTM import LSTMCell, BidirectionalLSTM
 from hmm_model.hmm import HMM
+from entropy_peom import run_my_model, predict
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
@@ -28,6 +32,8 @@ def index():
 def generate():
     data = request.get_json()
     input_sentence = data['sentence']
+    input_origin = input_sentence
+    # print(input_origin)
     model_type = data['model']
     
     # 预处理输入
@@ -47,6 +53,18 @@ def generate():
     if model_type=="Markov":
         predicted_text = hmm_model.generate_next_line(input_sentence)
     
+    if model_type=="Maximum_Entropy":
+        vocab = json.load(open('token/tokenizer_entropy.json', 'r', encoding='utf-8'))
+        input = []
+
+        for i in input_origin:
+            try:
+                input.append(vocab[i])
+            except:
+                input.append(random.randint(1, len(vocab)))
+        # print(input)
+        predicted_text = predict(input, vocab)
+
     return jsonify({'result': predicted_text})
 
 if __name__ == '__main__':

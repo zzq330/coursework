@@ -189,6 +189,7 @@ class MyMaxEntropy(object):
         """
         X = self._rebuild_X(X)
         result_list = []
+        # print(X)
 
         for x in X:
             max_result = 0
@@ -214,13 +215,15 @@ def run_my_model(dataset, vocab, data_preprocessor):
     labels = list(vocab.values())
     # import pdb; pdb.set_trace()
     data_set = [[str(i) for i in j] for j in data_set]
+    print("1")
+    print(data_set[0])
     columns = [str(i) for i in columns]
     labels = [str(i) for i in labels]
 
     X = [i[:-1] for i in data_set]
     X_columns = columns[:-1]
     Y = [i[-1] for i in data_set]
-    # print(X)
+    print(X[0:6])
     # print(Y)
 
     my = MyMaxEntropy()
@@ -231,16 +234,17 @@ def run_my_model(dataset, vocab, data_preprocessor):
     train_Y = Y[:train_len]
     test_Y = Y[train_len:train_len+test_len]
     
-    path = "D:\AppData/python/peom_generate/coursework/model_saved/entropy_final.jsonl"
+    path = "entropy_final.jsonl"
     # my.fit(train_X, X_columns, train_Y, label=labels, max_iter=100, save_path=path)
     my.load_model(path, labels, X_columns)
 
     # print(my.params)
-
+    # print(X)
+    print(test_X)
     pred_Y= my.predict(test_X)
     print('result: ')
     # import pdb; pdb.set_trace()
-    input_index = test_X[0]
+    input_index = test_X[1]
     truth_index = test_Y
     pred_index = [i[1] for i in pred_Y]
     input_text = ''.join([data_preprocessor.tokenizer.index_word[int(idx)] for idx in input_index if int(idx) != 0])
@@ -267,27 +271,46 @@ def get_train_dataset(input_sequences, target_sequences):
             dataset.append(seq[i:i+input_len+1])
     return dataset
 
+
 def predict(X_input, vocab):
+    # print(X_input)
+
     columns = [1,2,3,4,5,6]
     labels = list(vocab.values())
+    id_to_word = {value: key for key, value in vocab.items()}
 
-    X_input = [str(i) for i in X_input[0]]
+    X_input = [str(i) for i in X_input]
     columns = [str(i) for i in columns]
     labels = [str(i) for i in labels]
     X_columns = columns[:-1]
 
     my = MyMaxEntropy()
-    path = "D:\AppData/python/peom_generate/coursework/model_saved/entropy_final.jsonl"
+    path = "entropy_final.jsonl"
     my.load_model(path, labels, X_columns)
 
+    # print([X_input])
+    '''
+        Expected:
+        [['339', '332', '649', '337', '836'], ['332', '649', '337', '836', '1795'],
+          ['649', '337', '836', '1795', '531'], ['337', '836', '1795', '531', '821'], 
+          ['836', '1795', '531', '821', '371']]
+        Now:
+        [['119', '17', '23', '46', '19']]
+        or
+        ['119', '17', '23', '46', '19']
+    '''
+    # pred_Y= my.predict([X_input])
+    # print(f'result: {pred_Y}')
+
     pred_Y= my.predict(X_input)
-    print('result: ')
-    
+    # print(f'result: {pred_Y}')
+
     input_index = X_input
     pred_index = [i[1] for i in pred_Y]
-    input_text = ''.join([data_preprocessor.tokenizer.index_word[int(idx)] for idx in input_index if int(idx) != 0])
-    pred_text = ''.join([data_preprocessor.tokenizer.index_word[int(idx)] for idx in pred_index if int(idx) != 0] )
-    print(input_text, pred_text)
+    # input_text = ''.join([vocab[int(idx)] for idx in input_index if int(idx) != 0])
+    pred_text = ''.join([id_to_word[int(idx)] for idx in pred_index if int(idx) != 0] )
+    print(X_input, pred_text)
+    return pred_text
 
 
 if __name__ == '__main__':
@@ -297,13 +320,17 @@ if __name__ == '__main__':
     # shape: (52921, 10)
     input_sequences, target_sequences = data_preprocessor.preprocess_data()
     # 保存 tokenizer 和 max_seq_len
-    data_preprocessor.save('D:\AppData\python\peom_generate\coursework\\token/tokenizer_entropy.json', 'D:\AppData\python\peom_generate\coursework\\token/max_seq_len_entropy.txt')
-    vocab = json.load(open('D:\AppData\python\peom_generate\coursework\\token/tokenizer_entropy.json', 'r', encoding='utf-8'))
+    data_preprocessor.save('token/tokenizer_entropy.json', 'token/max_seq_len_entropy.txt')
+    vocab = json.load(open('token/tokenizer_entropy.json', 'r', encoding='utf-8'))
     dataset = get_train_dataset(input_sequences, target_sequences)
+    # print("!")
+    # print(dataset[0:3])
     # import pdb; pdb.set_trace()
     
-    import pdb; pdb.set_trace()
-    # run_my_model(dataset=dataset, vocab=vocab, data_preprocessor=data_preprocessor)
+    # import pdb; pdb.set_trace()
+    run_my_model(dataset=dataset, vocab=vocab, data_preprocessor=data_preprocessor)
     input_text = '海上生明月'
-    input_sequence = data_preprocessor.tokenizer.texts_to_sequences([input_text])
-    predict(input_sequence, vocab)
+    input_text = [vocab[i] for i in input_text]
+    # input_text = data_preprocessor.tokenizer.texts_to_sequences([input_text])[0]
+    print(input_text)
+    predict(input_text, vocab)

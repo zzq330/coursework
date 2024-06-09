@@ -1,8 +1,8 @@
 # data_preprocessor.py
 
 import json
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
+from keras_preprocessing.text import Tokenizer
+from keras_preprocessing.sequence import pad_sequences
 
 class DataPreprocessor:
     def __init__(self):
