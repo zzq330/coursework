@@ -1,10 +1,10 @@
+
 import numpy as np
 import json
 import tqdm
 np.random.seed(10)
 # train.py
-from data_preprocessor import DataPreprocessor
-
+from .preprocess import DataPreprocessor
 
 class MyMaxEntropy(object):
     def __init__(self, lr=0.0001):
@@ -234,7 +234,7 @@ def run_my_model(dataset, vocab, data_preprocessor):
     train_Y = Y[:train_len]
     test_Y = Y[train_len:train_len+test_len]
     
-    path = "entropy_final.jsonl"
+    path = "entropy/entropy_final.jsonl"
     # my.fit(train_X, X_columns, train_Y, label=labels, max_iter=100, save_path=path)
     my.load_model(path, labels, X_columns)
 
@@ -285,7 +285,7 @@ def predict(X_input, vocab):
     X_columns = columns[:-1]
 
     my = MyMaxEntropy()
-    path = "entropy_final.jsonl"
+    path = "entropy/entropy_final.jsonl"
     my.load_model(path, labels, X_columns)
 
     # print([X_input])
@@ -320,8 +320,8 @@ if __name__ == '__main__':
     # shape: (52921, 10)
     input_sequences, target_sequences = data_preprocessor.preprocess_data()
     # 保存 tokenizer 和 max_seq_len
-    data_preprocessor.save('token/tokenizer_entropy.json', 'token/max_seq_len_entropy.txt')
-    vocab = json.load(open('token/tokenizer_entropy.json', 'r', encoding='utf-8'))
+    data_preprocessor.save('tokenizer_entropy.json', 'max_seq_len_entropy.txt')
+    vocab = json.load(open('tokenizer_entropy.json', 'r', encoding='utf-8'))
     dataset = get_train_dataset(input_sequences, target_sequences)
     # print("!")
     # print(dataset[0:3])

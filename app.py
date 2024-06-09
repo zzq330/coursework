@@ -8,7 +8,7 @@ from keras_preprocessing.sequence import pad_sequences
 from BiLSTM.data_preprocessor import DataPreprocessor
 from BiLSTM.LSTM import LSTMCell, BidirectionalLSTM
 from hmm_model.hmm import HMM
-from entropy_peom import run_my_model, predict
+from entropy.entropy_peom import run_my_model, predict
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
@@ -54,7 +54,7 @@ def generate():
         predicted_text = hmm_model.generate_next_line(input_sentence)
     
     if model_type=="Maximum_Entropy":
-        vocab = json.load(open('token/tokenizer_entropy.json', 'r', encoding='utf-8'))
+        vocab = json.load(open('entropy/tokenizer_entropy.json', 'r', encoding='utf-8'))
         input = []
 
         for i in input_origin:

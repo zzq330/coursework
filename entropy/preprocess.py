@@ -40,13 +40,13 @@ class DataPreprocessor:
             # 选取0-9000的唐诗
             print("Train")
             for i in range(0, 10000, 1000):
-                self.data_pairs += self.extract_paragraphs(self.load_json(f'全唐诗/poet.tang.{i}.json'))
+                self.data_pairs += self.extract_paragraphs(self.load_json(f'../全唐诗/poet.tang.{i}.json'))
             # for i in range(0, 200000, 1000):
             #     self.data_pairs += self.extract_paragraphs(self.load_json(f'../全唐诗/poet.song.{i}.json'))
         else:
             print("Test")
             for i in range(50000, 52000, 1000):
-                self.data_pairs += self.extract_paragraphs(self.load_json(f'全唐诗/poet.tang.{i}.json'))
+                self.data_pairs += self.extract_paragraphs(self.load_json(f'../全唐诗/poet.tang.{i}.json'))
             # for i in range(200000, 255000, 1000):
             #     self.data_pairs += self.extract_paragraphs(self.load_json(f'../全唐诗/poet.song.{i}.json'))
 
