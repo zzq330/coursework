@@ -1,7 +1,7 @@
 # predict.py
 
 import numpy as np
-from keras.preprocessing.sequence import pad_sequences
+from keras_preprocessing.sequence import pad_sequences
 from keras.models import load_model
 from data_preprocessor import DataPreprocessor
 
